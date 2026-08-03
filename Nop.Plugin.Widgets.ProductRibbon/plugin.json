@@ -1,0 +1,11 @@
+{
+  "Group": "Widgets",
+  "FriendlyName": "Ürün Etiketi Rozetleri (Product Ribbon Widget)",
+  "SystemName": "Widgets.ProductRibbon",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Beyzanur",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.ProductRibbon.dll",
+  "Description": "nopCommerce 4.50.x için ürün resimleri üzerinde 'Yeni', 'Çok Satan', '%20 İndirim' vb. etiketleri gösteren modüler widget eklentisi."
+}

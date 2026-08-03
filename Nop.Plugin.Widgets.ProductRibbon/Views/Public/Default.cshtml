@@ -1,0 +1,30 @@
+@model IList<Nop.Plugin.Widgets.ProductRibbon.Domain.ProductRibbon>
+@{
+    var widgetZone = ViewBag.WidgetZone as string ?? "";
+    var isProductDetails = widgetZone.Contains("ProductDetails", StringComparison.OrdinalIgnoreCase);
+}
+
+@if (Model != null && Model.Any())
+{
+    <link rel="stylesheet" href="~/Plugins/Widgets.ProductRibbon/wwwroot/css/styles.css" />
+
+    <div class="product-ribbon-container @(isProductDetails ? "in-product-details" : "in-product-box")">
+        @foreach (var ribbon in Model)
+        {
+            var isYeni = !string.IsNullOrEmpty(ribbon.Text) && 
+                (ribbon.Text.IndexOf("yeni", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                 ribbon.Text.IndexOf("new", StringComparison.OrdinalIgnoreCase) >= 0);
+
+            <span class="product-ribbon-badge @(isYeni ? "ribbon-sparkle" : "")" 
+                  style="background-color: @ribbon.BackgroundColor; color: @ribbon.TextColor;">
+                @if (isYeni)
+                {
+                    <span class="sparkle-star star-1">✦</span>
+                    <span class="sparkle-star star-2">✨</span>
+                    <span class="sparkle-star star-3">✦</span>
+                }
+                @ribbon.Text
+            </span>
+        }
+    </div>
+}
