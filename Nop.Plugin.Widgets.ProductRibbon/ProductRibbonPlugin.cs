@@ -60,7 +60,7 @@ namespace Nop.Plugin.Widgets.ProductRibbon
 
         /// <summary>
         /// Widget'ın tetikleneceği widget alanlarını (Widget Zones) döner.
-        /// Ürün kutularının üzerinde görünmesi için ProductBoxAddinfoBefore ve ProductBoxAddinfoAfter alanları eklenmiştir.
+        /// Ürün kutularının üzerinde görünmesi için ProductBoxAddinfoBefore ve ProductDetailsOverviewTop alanları eklenmiştir.
         /// </summary>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
@@ -100,15 +100,11 @@ namespace Nop.Plugin.Widgets.ProductRibbon
                 Visible = true
             };
 
-            var configNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Configuration");
-            if (configNode != null)
-            {
-                configNode.ChildNodes.Add(pluginNode);
-            }
+            var pluginMenuNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Configuration" || x.SystemName == "Plugins");
+            if (pluginMenuNode != null)
+                pluginMenuNode.ChildNodes.Add(pluginNode);
             else
-            {
                 rootNode.ChildNodes.Add(pluginNode);
-            }
         }
 
         public override async Task InstallAsync()
@@ -116,42 +112,23 @@ namespace Nop.Plugin.Widgets.ProductRibbon
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.ProductRibbon.AdminMenuTitle"] = "Ürün Etiketleri (Ribbons)",
-                ["Plugins.Widgets.ProductRibbon.PageTitle"] = "Ürün Etiketleri Yönetimi",
-                ["Plugins.Widgets.ProductRibbon.Fields.Text"] = "Etiket Metni",
-                ["Plugins.Widgets.ProductRibbon.Fields.Text.Hint"] = "Örn: 'Yeni', 'Çok Satan', '%20 İndirim', 'Tükendi'",
-                ["Plugins.Widgets.ProductRibbon.Fields.BackgroundColor"] = "Arka Plan Rengi",
-                ["Plugins.Widgets.ProductRibbon.Fields.BackgroundColor.Hint"] = "Etiketin arka plan HEX renk kodu.",
-                ["Plugins.Widgets.ProductRibbon.Fields.TextColor"] = "Yazı Rengi",
-                ["Plugins.Widgets.ProductRibbon.Fields.TextColor.Hint"] = "Etiketin üzerindeki yazının HEX renk kodu.",
-                ["Plugins.Widgets.ProductRibbon.Fields.DisplayOrder"] = "Gösterim Sırası",
-                ["Plugins.Widgets.ProductRibbon.Fields.DisplayOrder.Hint"] = "Etiketin öncelik sırası.",
-                ["Plugins.Widgets.ProductRibbon.Fields.IsActive"] = "Aktif mi?",
-                ["Plugins.Widgets.ProductRibbon.Fields.IsActive.Hint"] = "Etiketin yayında olup olmayacağını belirler.",
-                ["Plugins.Widgets.ProductRibbon.Fields.Products"] = "Eşleştirilecek Ürünler",
-                ["Plugins.Widgets.ProductRibbon.Fields.Products.Hint"] = "Bu etiketin gösterileceği ürünleri seçiniz.",
                 ["Plugins.Widgets.ProductRibbon.TextRequired"] = "Etiket metni boş bırakılamaz.",
-                ["Plugins.Widgets.ProductRibbon.AddedSuccess"] = "Ürün etiketi başarıyla eklendi.",
-                ["Plugins.Widgets.ProductRibbon.UpdatedSuccess"] = "Ürün etiketi başarıyla güncellendi.",
-                ["Plugins.Widgets.ProductRibbon.DeletedSuccess"] = "Ürün etiketi başarıyla silindi."
+                ["Plugins.Widgets.ProductRibbon.AddedSuccess"] = "Etiket başarıyla eklendi.",
+                ["Plugins.Widgets.ProductRibbon.UpdatedSuccess"] = "Etiket başarıyla güncellendi.",
+                ["Plugins.Widgets.ProductRibbon.DeletedSuccess"] = "Etiket başarıyla silindi.",
+                ["Plugins.Widgets.ProductRibbon.Fields.Text"] = "Etiket Metni",
+                ["Plugins.Widgets.ProductRibbon.Fields.BackgroundColor"] = "Arka Plan Rengi",
+                ["Plugins.Widgets.ProductRibbon.Fields.TextColor"] = "Yazı Rengi",
+                ["Plugins.Widgets.ProductRibbon.Fields.IsActive"] = "Aktif Mi?",
+                ["Plugins.Widgets.ProductRibbon.Fields.DisplayOrder"] = "Görüntülenme Sırası",
+                ["Plugins.Widgets.ProductRibbon.Fields.Products"] = "Eşleşen Ürünler"
             });
-
-            if (!_widgetSettings.ActiveWidgetSystemNames.Contains(PluginDescriptor.SystemName))
-            {
-                _widgetSettings.ActiveWidgetSystemNames.Add(PluginDescriptor.SystemName);
-                await _settingService.SaveSettingAsync(_widgetSettings);
-            }
 
             await base.InstallAsync();
         }
 
         public override async Task UninstallAsync()
         {
-            if (_widgetSettings.ActiveWidgetSystemNames.Contains(PluginDescriptor.SystemName))
-            {
-                _widgetSettings.ActiveWidgetSystemNames.Remove(PluginDescriptor.SystemName);
-                await _settingService.SaveSettingAsync(_widgetSettings);
-            }
-
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.ProductRibbon");
             await base.UninstallAsync();
         }

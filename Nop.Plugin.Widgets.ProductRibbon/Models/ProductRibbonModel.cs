@@ -10,8 +10,7 @@ namespace Nop.Plugin.Widgets.ProductRibbon.Models
     {
         public ProductRibbonModel()
         {
-            SelectedProductIds = new List<int>();
-            AvailableProducts = new List<SelectListItem>();
+            ProductSearchModel = new ProductRibbonProductSearchModel();
         }
 
         [NopResourceDisplayName("Plugins.Widgets.ProductRibbon.Fields.Text")]
@@ -29,9 +28,6 @@ namespace Nop.Plugin.Widgets.ProductRibbon.Models
         [NopResourceDisplayName("Plugins.Widgets.ProductRibbon.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Plugins.Widgets.ProductRibbon.Fields.Products")]
-        public IList<int> SelectedProductIds { get; set; }
-
-        public IList<SelectListItem> AvailableProducts { get; set; }
+        public ProductRibbonProductSearchModel ProductSearchModel { get; set; }
     }
 }

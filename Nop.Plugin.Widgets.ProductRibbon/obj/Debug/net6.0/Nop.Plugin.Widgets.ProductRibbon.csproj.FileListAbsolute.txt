@@ -303,4 +303,5 @@ C:\nopCommerce_4.50.3_Source\src\Plugins\Nop.Plugin.Widgets.ProductRibbon\obj\De
 C:\nopCommerce_4.50.3_Source\src\Plugins\Nop.Plugin.Widgets.ProductRibbon\obj\Debug\net6.0\refint\Nop.Plugin.Widgets.ProductRibbon.dll
 C:\nopCommerce_4.50.3_Source\src\Plugins\Nop.Plugin.Widgets.ProductRibbon\obj\Debug\net6.0\Nop.Plugin.Widgets.ProductRibbon.pdb
 C:\nopCommerce_4.50.3_Source\src\Plugins\Nop.Plugin.Widgets.ProductRibbon\obj\Debug\net6.0\ref\Nop.Plugin.Widgets.ProductRibbon.dll
+C:\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Widgets.ProductRibbon\Views\ProductAddPopup.cshtml
 C:\nopCommerce_4.50.3_Source\src\Plugins\Nop.Plugin.Widgets.ProductRibbon\obj\Debug\net6.0\Nop.Plugin.Widgets.ProductRibbon.csproj.CopyComplete

@@ -5,7 +5,7 @@
     var ribbons = ViewBag.Ribbons as List<ProductRibbonModel> ?? new List<ProductRibbonModel>();
 }
 
-<form asp-area="Admin" asp-controller="WidgetsProductRibbon" asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+<form id="ribbon-form" asp-area="Admin" asp-controller="WidgetsProductRibbon" asp-action="@(isEdit ? "Edit" : "Create")" method="post">
     @Html.AntiForgeryToken()
 
     <div class="cards-group">
@@ -67,15 +67,88 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="SelectedProductIds" />
+                @if (isEdit)
+                {
+                    <input type="hidden" asp-for="ProductSearchModel.ProductRibbonId" value="@Model.Id" />
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="col-form-label">Eşleşen Ürünler</label>
+                                <div title="Bu etikete bağlı ürünler" class="ico-help"><i class="fas fa-question-circle"></i></div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card card-default card-outline">
+                                <div class="card-body">
+                                    @await Html.PartialAsync("Table", new DataTablesModel
+                                    {
+                                        Name = "mapped-products-grid",
+                                        UrlRead = new DataUrl("ProductList", "WidgetsProductRibbon", new RouteValueDictionary { [nameof(Model.ProductSearchModel.ProductRibbonId)] = Model.Id }),
+                                        UrlDelete = new DataUrl("ProductDelete", "WidgetsProductRibbon", new RouteValueDictionary { ["ribbonId"] = Model.Id }),
+                                        BindColumnNameActionDelete = nameof(ProductRibbonProductModel.ProductId),
+                                        Length = Model.ProductSearchModel.PageSize,
+                                        LengthMenu = Model.ProductSearchModel.AvailablePageSizes,
+                                        Filters = new List<FilterParameter>
+                                        {
+                                            new FilterParameter(nameof(Model.ProductSearchModel.ProductRibbonId))
+                                        },
+                                        ColumnCollection = new List<ColumnProperty>
+                                        {
+                                            new ColumnProperty(nameof(ProductRibbonProductModel.ProductName))
+                                            {
+                                                Title = T("Admin.Catalog.Products.Fields.Name").Text
+                                            },
+                                            new ColumnProperty(nameof(ProductRibbonProductModel.Published))
+                                            {
+                                                Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                                Width = "100",
+                                                ClassName = NopColumnClassDefaults.CenterAll,
+                                                Render = new RenderBoolean()
+                                            },
+                                            new ColumnProperty(nameof(ProductRibbonProductModel.ProductId))
+                                            {
+                                                Title = T("Admin.Common.Delete").Text,
+                                                Width = "100",
+                                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                                ClassName = NopColumnClassDefaults.Button
+                                            }
+                                        }
+                                    })
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "WidgetsProductRibbon", new { ribbonId = Model.Id, btnId = "btnRefreshProducts", formId = "ribbon-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Ürün Ekle
+                                    </button>
+                                    <button type="submit" id="btnRefreshProducts" style="display: none"></button>
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#btnRefreshProducts').click(function () {
+                                                updateTable('#mapped-products-grid');
+                                                return false;
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        <nop-select asp-for="SelectedProductIds" asp-items="Model.AvailableProducts" asp-multiple="true" />
-                        <span asp-validation-for="SelectedProductIds"></span>
+                }
+                else
+                {
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="col-form-label">Eşleşen Ürünler</label>
+                                <div title="Etiketi kaydettikten sonra ürün ekleyebilirsiniz" class="ico-help"><i class="fas fa-question-circle"></i></div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="alert alert-info mb-0">
+                                Etiketi kaydettikten sonra ürün ekleyebilirsiniz.
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
 
                 <div class="form-group row">
                     <div class="col-md-9 offset-md-3">
